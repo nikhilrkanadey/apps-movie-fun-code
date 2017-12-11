@@ -60,14 +60,14 @@ public class HomeController {
 
         model.put("movies", moviesBean.getMovies());
 
-        TransactionStatus transactionStatusAlb = platformTransactionManagerAlbums.getTransaction(null);
+       /* TransactionStatus transactionStatusAlb = platformTransactionManagerAlbums.getTransaction(null);
         albumsBean.addAlbum(new Album("artist","title",2017,10));
 
         System.out.println("#####################################    Transaction status " + transactionStatus.isCompleted());
         System.out.println("#####################################    Transaction status " + transactionStatus.isNewTransaction());
         platformTransactionManagerAlbums.commit(transactionStatusAlb);
         System.out.println("#####################################    Transaction status " + transactionStatus.isCompleted());
-
+*/
 
         model.put("albums", albumsBean.getAlbums());
 
