@@ -1,6 +1,7 @@
 package org.superbiz.moviefun;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -26,12 +27,19 @@ public class DbConfig {
             @Value("${moviefun.datasources.albums.username}") String username,
             @Value("${moviefun.datasources.albums.password}") String password
     ) {
+
+        HikariDataSource hikariDataSource = new HikariDataSource();
+
         MysqlDataSource dataSource = new MysqlDataSource();
         dataSource.setURL(url);
         dataSource.setUser(username);
         dataSource.setPassword(password);
         dataSource.setDatabaseName("albums");
-        return dataSource;
+
+        hikariDataSource.setDataSource(dataSource);
+        return hikariDataSource;
+
+        //return dataSource;
     }
 
 
@@ -41,12 +49,16 @@ public class DbConfig {
             @Value("${moviefun.datasources.movies.username}") String username,
             @Value("${moviefun.datasources.movies.password}") String password
     ) {
+        HikariDataSource hikariDataSource = new HikariDataSource();
         MysqlDataSource dataSource = new MysqlDataSource();
         dataSource.setURL(url);
         dataSource.setUser(username);
         dataSource.setPassword(password);
         dataSource.setDatabaseName("movies");
-        return dataSource;
+
+        hikariDataSource.setDataSource(dataSource);
+        return hikariDataSource;
+        //return dataSource;
     }
 
     @Bean
