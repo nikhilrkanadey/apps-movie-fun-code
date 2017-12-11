@@ -74,15 +74,17 @@ public class MoviesBean {
 
     public void deleteMovie(Movie movie) {
 
-        TransactionStatus transactionStatus =  myTXn.getTransaction(null);
+
         entityManager.remove(movie);
-        myTXn.commit(transactionStatus);
+
     }
 
 
-    public void deleteMovieId(long id) {
+        public void deleteMovieId(long id) {
+            TransactionStatus transactionStatus =  myTXn.getTransaction(null);
         Movie movie = entityManager.find(Movie.class, id);
         deleteMovie(movie);
+            myTXn.commit(transactionStatus);
     }
 
     public List<Movie> getMovies() {
