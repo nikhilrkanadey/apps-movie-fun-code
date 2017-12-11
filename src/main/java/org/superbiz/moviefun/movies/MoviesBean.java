@@ -16,12 +16,17 @@
  */
 package org.superbiz.moviefun.movies;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -34,8 +39,18 @@ import java.util.List;
 @Repository
 public class MoviesBean {
 
+
     @PersistenceContext(unitName = "moviesLocalBean")
     private EntityManager entityManager;
+
+    private PlatformTransactionManager myTXn;
+
+    public MoviesBean(@Qualifier("moviesLocalBean") EntityManager entityManager,@Qualifier("moviesTM") PlatformTransactionManager transactionManager) {
+        this.entityManager = entityManager;
+        this.myTXn = transactionManager;
+    }
+
+
 
     public Movie find(Long id) {
         return entityManager.find(Movie.class, id);
@@ -43,20 +58,28 @@ public class MoviesBean {
 
 
     public void addMovie(Movie movie) {
+        TransactionStatus transactionStatus =  myTXn.getTransaction(null);
         entityManager.persist(movie);
+        myTXn.commit(transactionStatus);
     }
 
-    @Transactional
+
     public void editMovie(Movie movie) {
+
+        TransactionStatus transactionStatus =  myTXn.getTransaction(null);
         entityManager.merge(movie);
+        myTXn.commit(transactionStatus);
     }
 
-    @Transactional
+
     public void deleteMovie(Movie movie) {
+
+        TransactionStatus transactionStatus =  myTXn.getTransaction(null);
         entityManager.remove(movie);
+        myTXn.commit(transactionStatus);
     }
 
-    @Transactional
+
     public void deleteMovieId(long id) {
         Movie movie = entityManager.find(Movie.class, id);
         deleteMovie(movie);
@@ -117,7 +140,10 @@ public class MoviesBean {
     }
 
     public void clean() {
+
+        TransactionStatus transactionStatus =  myTXn.getTransaction(null);
         entityManager.createQuery("delete from Movie").executeUpdate();
+        myTXn.commit(transactionStatus);
     }
 
 

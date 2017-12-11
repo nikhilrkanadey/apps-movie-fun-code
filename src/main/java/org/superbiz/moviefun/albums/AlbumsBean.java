@@ -16,11 +16,14 @@
  */
 package org.superbiz.moviefun.albums;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.superbiz.moviefun.DbConfig;
 
@@ -36,9 +39,17 @@ public class AlbumsBean {
     @PersistenceContext(unitName = "albumsLocalBean")
     private EntityManager entityManager;
 
+    private PlatformTransactionManager myTXn;
+
+    public AlbumsBean(@Qualifier("albumsLocalBean") EntityManager entityManager, @Qualifier("albumsTM") PlatformTransactionManager transactionManager) {
+        this.entityManager = entityManager;
+        this.myTXn = transactionManager;
+    }
 
     public void addAlbum(Album album) {
+        TransactionStatus transactionStatus =  myTXn.getTransaction(null);
         entityManager.persist(album);
+        myTXn.commit(transactionStatus);
     }
 
     public List<Album> getAlbums() {

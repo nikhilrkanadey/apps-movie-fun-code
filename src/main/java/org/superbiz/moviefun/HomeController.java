@@ -76,6 +76,7 @@ public class HomeController {
 
     public void createMovies(){
         TransactionStatus transactionStatus= platformTransactionManager.getTransaction(null);
+        System.out.println("###################Create Movie Transaction status "+transactionStatus);
         for (Movie movie : movieFixtures.load()) {
             moviesBean.addMovie(movie);
         }
