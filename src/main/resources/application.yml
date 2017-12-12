@@ -3,11 +3,11 @@ moviefun:
     movies:
       url: jdbc:mysql://localhost:3306/movies?useSSL=false
       username: root
-      password: Anju@2510
+      password: root
     albums:
       url: jdbc:mysql://localhost:3306/albums?useSSL=false
       username: root
-      password: Anju@2510
+      password: root
 
 spring:
    mvc.view:
