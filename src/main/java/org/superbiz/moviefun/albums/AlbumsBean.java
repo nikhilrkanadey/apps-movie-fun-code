@@ -32,6 +32,7 @@ public class AlbumsBean {
 
     @Transactional
     public void addAlbum(Album album) {
+
         entityManager.persist(album);
     }
 
